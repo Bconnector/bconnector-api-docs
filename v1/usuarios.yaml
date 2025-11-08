@@ -1,14 +1,8 @@
 
-openapi: 3.1.0
-info:
-  title: Usuários API
-  version: 1.0.0
-  description: Endpoints relacionados a usuários e autenticação.
-tags: [Usuários]
-
 paths:
   /usuario/create:
     post:
+      tags: [Usuários]
       summary: Cria um novo usuário
       requestBody:
         required: true
@@ -22,16 +16,16 @@ paths:
                 senha: { type: string, example: "********" }
       responses:
         "200":
-          description: Usuário criado com sucesso
+          description: Usuário criado
           content:
             application/json:
               example:
                 sucesso: true
-                id_usuario: "b9a7f22e-09e2-4f31-b9ef-3b7c2a5fa403"
-
+                id_usuario: "uuid-gerado"
   /usuario/login:
     post:
-      summary: Realiza login de usuário
+      tags: [Usuários]
+      summary: Login de usuário
       requestBody:
         required: true
         content:
@@ -43,9 +37,9 @@ paths:
                 senha: { type: string }
       responses:
         "200":
-          description: Login realizado com sucesso
+          description: Login bem-sucedido
           content:
             application/json:
               example:
                 sucesso: true
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                token: "jwt-token"
