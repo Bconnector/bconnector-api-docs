@@ -1,20 +1,14 @@
 
-openapi: 3.1.0
-info:
-  title: Empresas API
-  version: 1.0.0
-  description: Endpoints relacionados a empresas.
-tags: [Empresas]
-
 paths:
   /empresa/create:
     post:
+      tags: [Empresas]
       summary: Cria uma nova empresa
       responses:
-        "200": { description: Empresa criada com sucesso }
-
+        "200": { description: Empresa criada }
   /empresa/list:
     get:
-      summary: Lista empresas cadastradas
+      tags: [Empresas]
+      summary: Lista empresas
       responses:
         "200": { description: Lista de empresas }
