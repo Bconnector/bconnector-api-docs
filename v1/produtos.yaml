@@ -3,25 +3,99 @@ openapi: 3.1.0
 info:
   title: Produtos API
   version: 1.0.0
-  description: Endpoints de produtos (CRUD completo).
+  description: Endpoints relacionados ao cadastro e gestão de produtos.
+tags: [Produtos]
+
 paths:
   /produto/create:
     post:
       summary: Cria um novo produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../openapi.yaml#/components/schemas/Produto"
       responses:
-        "200": { description: Produto criado com sucesso }
+        "200":
+          description: Produto criado com sucesso
+          content:
+            application/json:
+              example:
+                sucesso: true
+                id_produto: "760488a7-0827-4acf-b11e-b03d838b224c"
+
   /produto/update:
     post:
       summary: Atualiza um produto existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../openapi.yaml#/components/schemas/Produto"
       responses:
-        "200": { description: Produto atualizado }
+        "200":
+          description: Produto atualizado com sucesso
+          content:
+            application/json:
+              example:
+                sucesso: true
+                mensagem: "Produto atualizado com sucesso."
+                id_produto: "760488a7-0827-4acf-b11e-b03d838b224c"
+
   /produto/list:
     get:
-      summary: Lista produtos
+      summary: Lista produtos de um fornecedor
+      parameters:
+        - name: id_fornecedor
+          in: query
+          required: false
+          schema: { type: string }
       responses:
-        "200": { description: Lista de produtos }
+        "200":
+          description: Lista de produtos
+          content:
+            application/json:
+              example:
+                sucesso: true
+                total: 2
+                produtos:
+                  - id_produto: "760488a7-0827-4acf-b11e-b03d838b224c"
+                    nome: "Escova Secadora Soft Beauty Cherry 1300W"
+                    preco: 129.90
+                    estoque: 10
+
   /produto/delete:
     post:
       summary: Exclui um produto (com regras de negócio)
+      description: >
+        Exclui ou inativa um produto seguindo regras:
+        - Apenas administradores, fornecedores ou clientes WL podem excluir;
+        - Se houver histórico de vendas, o produto é apenas marcado como "excluído".
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_produto: { type: string }
       responses:
-        "200": { description: Produto excluído ou desativado }
+        "200":
+          description: Produto excluído ou inativado
+          content:
+            application/json:
+              examples:
+                excluido:
+                  summary: Exclusão total
+                  value:
+                    sucesso: true
+                    acao: "deletado_fisicamente"
+                    mensagem: "Produto removido definitivamente."
+                inativado:
+                  summary: Exclusão lógica
+                  value:
+                    sucesso: true
+                    acao: "inativado"
+                    mensagem: "Produto marcado como excluído (possui histórico de vendas)."
