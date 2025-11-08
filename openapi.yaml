@@ -1,43 +1,89 @@
 openapi: 3.1.0
 info:
   title: BConnector API
-  description: >
-    Documentação oficial da API BConnector — integração entre fornecedores, vendedores e marketplaces.
   version: 1.0.0
+  description: >
+    API oficial da BConnector — Integração entre fornecedores, vendedores e marketplaces.
+
+    Esta documentação cobre os endpoints REST disponíveis para integração com o backend da BConnector.
+
   contact:
     name: Equipe BConnector
     url: https://bconnector.com.br
+    email: suporte@bconnector.com.br
+
 servers:
-  - url: https://api.bconnector.com.br/v1
-    description: Ambiente de produção
   - url: https://rejaiayzrixbhoieebpd.supabase.co/functions/v1
     description: Ambiente de desenvolvimento (Supabase)
+  - url: https://api.bconnector.com.br/v1
+    description: Ambiente de produção (futuro)
+
+tags:
+  - name: Produtos
+    description: Endpoints relacionados ao cadastro e gestão de produtos.
 
 paths:
   /produto-create:
     post:
+      tags: [Produtos]
       summary: Cria um novo produto
-      description: Registra um novo produto no sistema, incluindo variações e mídias.
+      description: >
+        Cria um produto principal e suas variações vinculadas.
+        Exige autenticação via Bearer token e identificação da empresa e fornecedor.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProdutoCreate'
+              $ref: "#/components/schemas/ProdutoCreate"
       responses:
         "200":
           description: Produto criado com sucesso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseOK'
+                $ref: "#/components/schemas/ResponseCreate"
+
+  /produto-update:
+    post:
+      tags: [Produtos]
+      summary: Atualiza um produto existente
+      description: >
+        Atualiza dados de um produto já existente.
+        Exige o `id_produto` e o `id_empresa` como referência.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProdutoUpdate"
+      responses:
+        "200":
+          description: Produto atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseOK"
+
   /produto-list:
     get:
+      tags: [Produtos]
       summary: Lista produtos
+      description: >
+        Retorna a lista de produtos cadastrados, podendo filtrar por fornecedor e empresa.
+        Suporta paginação e filtro por status (`ativo`, `excluido`).
       parameters:
+        - name: id_empresa
+          in: query
+          required: false
+          schema: { type: string, format: uuid }
         - name: id_fornecedor
           in: query
+          required: false
           schema: { type: string, format: uuid }
+        - name: pagina
+          in: query
+          schema: { type: integer, default: 1 }
         - name: limite
           in: query
           schema: { type: integer, default: 50 }
@@ -47,17 +93,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProdutoList'
+                $ref: "#/components/schemas/ProdutoList"
+
+  /produto-delete:
+    post:
+      tags: [Produtos]
+      summary: Exclui um produto (com regras de negócio)
+      description: >
+        Exclui um produto de acordo com as permissões do usuário.
+
+        - Admin: pode excluir fisicamente.
+        - Fornecedor: pode excluir apenas se não houver histórico de vendas.
+        - Cliente WL: só pode excluir se o produto não estiver sincronizado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProdutoDelete"
+      responses:
+        "200":
+          description: Produto excluído com sucesso (ou marcado como excluído)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDelete"
 
 components:
   schemas:
     ProdutoCreate:
       type: object
+      required: [id_empresa, id_fornecedor, nome, codigo]
       properties:
         id_empresa: { type: string, format: uuid }
         id_fornecedor: { type: string, format: uuid }
         nome: { type: string }
+        codigo: { type: string }
         preco: { type: number }
+        unidade: { type: string }
+        marca: { type: string }
+        descricaoCurta: { type: string }
+        descricaoComplementar: { type: string }
         variacoes:
           type: array
           items:
@@ -65,9 +141,71 @@ components:
             properties:
               codigo: { type: string }
               preco: { type: number }
+              variacao: { type: object }
+        midia:
+          type: object
+          properties:
+            imagens:
+              type: object
+              properties:
+                imagensURL:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      link: { type: string }
+
+    ProdutoUpdate:
+      allOf:
+        - $ref: "#/components/schemas/ProdutoCreate"
+        - type: object
+          required: [id_produto]
+          properties:
+            id_produto: { type: string, format: uuid }
+
+    ProdutoDelete:
+      type: object
+      required: [id_produto, id_empresa, role_user]
+      properties:
+        id_produto: { type: string, format: uuid }
+        id_empresa: { type: string, format: uuid }
+        id_fornecedor: { type: string, format: uuid }
+        role_user:
+          type: string
+          enum: [admin, fornecedor, cliente_wl]
+
+    ProdutoList:
+      type: object
+      properties:
+        sucesso: { type: boolean }
+        total: { type: integer }
+        produtos:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              nome: { type: string }
+              preco: { type: number }
+              ativo: { type: boolean }
+              excluido: { type: boolean }
+
     ResponseOK:
       type: object
       properties:
         sucesso: { type: boolean }
         mensagem: { type: string }
+
+    ResponseCreate:
+      type: object
+      properties:
+        sucesso: { type: boolean }
+        mensagem: { type: string }
         id_produto: { type: string }
+
+    ResponseDelete:
+      type: object
+      properties:
+        sucesso: { type: boolean }
+        acao: { type: string }
+        mensagem: { type: string }
