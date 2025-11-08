@@ -4,7 +4,7 @@ info:
   title: BConnector API
   version: 1.0.0
   description: >
-    Documentação atualizada automaticamente em 2025-11-08T15:52:00.696Z
+    Documentação atualizada automaticamente em 2025-11-08T16:20:41.588Z
 servers:
   - url: https://rejaiayzrixbhoieebpd.supabase.co/functions/v1
 paths:
