@@ -4,14 +4,37 @@ info:
   title: BConnector API
   version: 1.0.0
   description: >
-    Documenta��o atualizada automaticamente em 2025-11-08T16:20:41.588Z
+    API oficial da BConnector — Integração entre fornecedores, vendedores e marketplaces.
+    Atualizada automaticamente em 2025-11-08T18:33:39.956Z.
 servers:
   - url: https://rejaiayzrixbhoieebpd.supabase.co/functions/v1
+    description: Ambiente de desenvolvimento (Supabase)
+  - url: https://api.bconnector.com.br/v1
+    description: Ambiente de produção (futuro)
+tags:
+  - name: Usuários
+    description: Endpoints de autenticação e gestão de usuários.
+  - name: Empresas
+    description: Endpoints de cadastro e gestão de empresas.
+  - name: Fornecedores
+    description: Endpoints de cadastro e gestão de fornecedores.
+  - name: Produtos
+    description: Endpoints de cadastro e gestão de produtos.
 paths:
   /status:
     get:
       summary: Healthcheck
-      description: Verifica se a API est� operacional.
+      description: Verifica se a API está operacional.
       responses:
         "200":
           description: OK
+components:
+  pathItems:
+    usuarios: 
+      $ref: "./v1/usuarios.yaml"
+    empresas:
+      $ref: "./v1/empresas.yaml"
+    fornecedores:
+      $ref: "./v1/fornecedores.yaml"
+    produtos:
+      $ref: "./v1/produtos.yaml"
