@@ -1,1 +1,27 @@
 
+openapi: 3.1.0
+info:
+  title: Produtos API
+  version: 1.0.0
+  description: Endpoints de produtos (CRUD completo).
+paths:
+  /produto/create:
+    post:
+      summary: Cria um novo produto
+      responses:
+        "200": { description: Produto criado com sucesso }
+  /produto/update:
+    post:
+      summary: Atualiza um produto existente
+      responses:
+        "200": { description: Produto atualizado }
+  /produto/list:
+    get:
+      summary: Lista produtos
+      responses:
+        "200": { description: Lista de produtos }
+  /produto/delete:
+    post:
+      summary: Exclui um produto (com regras de negócio)
+      responses:
+        "200": { description: Produto excluído ou desativado }
