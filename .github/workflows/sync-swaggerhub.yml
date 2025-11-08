@@ -1,0 +1,23 @@
+name: Sync SwaggerHub
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "openapi.yaml"
+      - "v1/*.yaml"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Push to SwaggerHub
+        run: |
+          curl -X POST "https://api.swaggerhub.com/apis/BCONNECTORBR/bconnector-api?version=1.0.0" \
+          -H "Authorization: 7bb6be21-d76e-4b76-acab-37afb0eaa057" \
+          -H "Content-Type: application/yaml" \
+          --data-binary "@openapi.yaml"
