@@ -18,6 +18,7 @@ paths:
               example:
                 sucesso: true
                 id_produto: "uuid-produto"
+
   /produto/update:
     post:
       tags: [Produtos]
@@ -31,6 +32,7 @@ paths:
       responses:
         "200":
           description: Produto atualizado
+
   /produto/list:
     get:
       tags: [Produtos]
@@ -42,6 +44,7 @@ paths:
       responses:
         "200":
           description: Lista de produtos
+
   /produto/delete:
     post:
       tags: [Produtos]
