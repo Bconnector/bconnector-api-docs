@@ -4,22 +4,21 @@ info:
   title: BConnector API
   version: 1.0.0
   description: >
-    API oficial da BConnector — Integração entre fornecedores, vendedores e marketplaces.
-    Atualizada automaticamente em 2025-11-08T18:33:39.956Z.
+    API oficial da **BConnector** — Integração entre fornecedores, vendedores e marketplaces.  
+    Documentação atualizada automaticamente em 2025-11-08T18:41:21.057Z.
+
 servers:
+  - url: https://api.bconnector.com.br/v1
+    description: Ambiente de produção
   - url: https://rejaiayzrixbhoieebpd.supabase.co/functions/v1
     description: Ambiente de desenvolvimento (Supabase)
-  - url: https://api.bconnector.com.br/v1
-    description: Ambiente de produção (futuro)
+
 tags:
   - name: Usuários
-    description: Endpoints de autenticação e gestão de usuários.
   - name: Empresas
-    description: Endpoints de cadastro e gestão de empresas.
   - name: Fornecedores
-    description: Endpoints de cadastro e gestão de fornecedores.
   - name: Produtos
-    description: Endpoints de cadastro e gestão de produtos.
+
 paths:
   /status:
     get:
@@ -28,7 +27,47 @@ paths:
       responses:
         "200":
           description: OK
+          content:
+            application/json:
+              example:
+                status: ok
+                uptime: 3600
+
 components:
+  schemas:
+    Produto:
+      type: object
+      required: [id_empresa, nome, codigo]
+      properties:
+        id_empresa: { type: string, example: "23aa4527-591c-4a3a-b141-a91505a84c2e" }
+        id_fornecedor: { type: string, example: "714b2aac-3920-4e52-bd40-fba028f2f26f" }
+        nome: { type: string, example: "Escova Secadora Soft Beauty Cherry 1300W" }
+        codigo: { type: string, example: "BC-231-PKPRT" }
+        preco: { type: number, example: 129.90 }
+        unidade: { type: string, example: "UN" }
+        marca: { type: string, example: "Joias Infinity" }
+        descricaoCurta: { type: string, example: "Escova secadora 1300W com cerdas macias" }
+        descricaoComplementar: { type: string, example: "Produto bivolt com 2 anos de garantia." }
+        estoque: { type: integer, example: 10 }
+        variacoes:
+          type: array
+          items:
+            type: object
+            properties:
+              nome: { type: string, example: "Cor Rosa" }
+              codigo: { type: string, example: "BC-231-VR" }
+              preco: { type: number, example: 134.90 }
+              estoque: { type: integer, example: 5 }
+        midia:
+          type: object
+          properties:
+            imagens:
+              type: array
+              items:
+                type: object
+                properties:
+                  link: { type: string, example: "https://cdn.bconnector.com/produto1.jpg" }
+
   pathItems:
     usuarios: 
       $ref: "./v1/usuarios.yaml"
