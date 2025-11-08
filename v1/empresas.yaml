@@ -4,12 +4,15 @@ info:
   title: Empresas API
   version: 1.0.0
   description: Endpoints relacionados a empresas.
+tags: [Empresas]
+
 paths:
   /empresa/create:
     post:
       summary: Cria uma nova empresa
       responses:
         "200": { description: Empresa criada com sucesso }
+
   /empresa/list:
     get:
       summary: Lista empresas cadastradas
