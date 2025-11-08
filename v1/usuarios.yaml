@@ -1,13 +1,13 @@
 
 openapi: 3.1.0
 info:
-  title: Usu�rios API
+  title: Usuários API
   version: 1.0.0
-  description: Endpoints relacionados ao gerenciamento de usu�rios.
+  description: Endpoints de autenticação e gestão de usuários.
 paths:
   /usuario/create:
     post:
-      summary: Cria um novo usu�rio
+      summary: Cria um novo usuário
       requestBody:
         required: true
         content:
@@ -19,20 +19,9 @@ paths:
                 email: { type: string }
                 senha: { type: string }
       responses:
-        "200":
-          description: Usu�rio criado
+        "200": { description: Usuário criado com sucesso }
   /usuario/login:
     post:
-      summary: Login do usu�rio
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email: { type: string }
-                senha: { type: string }
+      summary: Realiza o login de um usuário
       responses:
-        "200":
-          description: Login bem-sucedido
+        "200": { description: Login realizado com sucesso }
