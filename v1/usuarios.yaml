@@ -1,1 +1,55 @@
 
+openapi: 3.1.0
+info:
+  title: Usuários API
+  version: 1.0.0
+  description: Endpoints relacionados ao gerenciamento de usuários da BConnector.
+tags:
+  - name: Usuários
+    description: Ações de autenticação, login, e gerenciamento de usuários.
+paths:
+  /usuario/create:
+    post:
+      tags: [Usuários]
+      summary: Cria um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome: { type: string }
+                email: { type: string }
+                senha: { type: string }
+      responses:
+        "200":
+          description: Usuário criado com sucesso
+  /usuario/login:
+    post:
+      tags: [Usuários]
+      summary: Login do usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                senha: { type: string }
+      responses:
+        "200":
+          description: Login bem-sucedido
+  /usuario/list:
+    get:
+      tags: [Usuários]
+      summary: Lista de usuários
+      parameters:
+        - name: role
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        "200":
+          description: Lista de usuários cadastrados
