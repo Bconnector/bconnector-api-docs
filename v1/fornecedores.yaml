@@ -4,12 +4,15 @@ info:
   title: Fornecedores API
   version: 1.0.0
   description: Endpoints de fornecedores.
+tags: [Fornecedores]
+
 paths:
   /fornecedor/create:
     post:
       summary: Cria um novo fornecedor
       responses:
         "200": { description: Fornecedor criado com sucesso }
+
   /fornecedor/list:
     get:
       summary: Lista fornecedores
