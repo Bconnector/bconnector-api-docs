@@ -1,1 +1,33 @@
 
+openapi: 3.1.0
+info:
+  title: Empresas API
+  version: 1.0.0
+  description: Endpoints de criação e listagem de empresas na BConnector.
+tags:
+  - name: Empresas
+paths:
+  /empresa/create:
+    post:
+      tags: [Empresas]
+      summary: Cria uma nova empresa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome: { type: string }
+                cnpj: { type: string }
+                email: { type: string }
+      responses:
+        "200":
+          description: Empresa criada com sucesso
+  /empresa/list:
+    get:
+      tags: [Empresas]
+      summary: Lista empresas cadastradas
+      responses:
+        "200":
+          description: Lista de empresas
