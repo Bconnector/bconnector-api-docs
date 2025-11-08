@@ -22,6 +22,7 @@ paths:
               example:
                 sucesso: true
                 id_usuario: "uuid-gerado"
+
   /usuario/login:
     post:
       tags: [Usuários]
