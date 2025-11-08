@@ -6,6 +6,7 @@ paths:
       summary: Cria um novo fornecedor
       responses:
         "200": { description: Fornecedor criado }
+
   /fornecedor/list:
     get:
       tags: [Fornecedores]
