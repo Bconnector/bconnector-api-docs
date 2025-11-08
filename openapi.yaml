@@ -5,7 +5,7 @@ info:
   version: 1.0.0
   description: >
     API oficial da **BConnector** — Integração entre fornecedores, vendedores e marketplaces.  
-    Documentação atualizada automaticamente em 2025-11-08T18:41:21.057Z.
+    Documentação atualizada automaticamente em 2025-11-08T18:47:38.613Z.
 
 servers:
   - url: https://api.bconnector.com.br/v1
@@ -22,16 +22,12 @@ tags:
 paths:
   /status:
     get:
+      tags: [default]
       summary: Healthcheck
-      description: Verifica se a API está operacional.
+      description: Verifica se a API está operacional
       responses:
         "200":
           description: OK
-          content:
-            application/json:
-              example:
-                status: ok
-                uptime: 3600
 
 components:
   schemas:
@@ -39,15 +35,14 @@ components:
       type: object
       required: [id_empresa, nome, codigo]
       properties:
-        id_empresa: { type: string, example: "23aa4527-591c-4a3a-b141-a91505a84c2e" }
-        id_fornecedor: { type: string, example: "714b2aac-3920-4e52-bd40-fba028f2f26f" }
-        nome: { type: string, example: "Escova Secadora Soft Beauty Cherry 1300W" }
+        id_empresa: { type: string, example: "uuid" }
+        id_fornecedor: { type: string, example: "uuid" }
+        nome: { type: string, example: "Escova Secadora Soft Beauty 1300W" }
         codigo: { type: string, example: "BC-231-PKPRT" }
-        preco: { type: number, example: 129.90 }
+        preco: { type: number, example: 249.90 }
         unidade: { type: string, example: "UN" }
-        marca: { type: string, example: "Joias Infinity" }
-        descricaoCurta: { type: string, example: "Escova secadora 1300W com cerdas macias" }
-        descricaoComplementar: { type: string, example: "Produto bivolt com 2 anos de garantia." }
+        marca: { type: string, example: "PHILCO" }
+        descricaoCurta: { type: string, example: "Escova secadora 1300W" }
         estoque: { type: integer, example: 10 }
         variacoes:
           type: array
@@ -58,22 +53,146 @@ components:
               codigo: { type: string, example: "BC-231-VR" }
               preco: { type: number, example: 134.90 }
               estoque: { type: integer, example: 5 }
-        midia:
-          type: object
-          properties:
-            imagens:
-              type: array
-              items:
-                type: object
-                properties:
-                  link: { type: string, example: "https://cdn.bconnector.com/produto1.jpg" }
 
-  pathItems:
-    usuarios: 
-      $ref: "./v1/usuarios.yaml"
-    empresas:
-      $ref: "./v1/empresas.yaml"
-    fornecedores:
-      $ref: "./v1/fornecedores.yaml"
-    produtos:
-      $ref: "./v1/produtos.yaml"
+
+
+paths:
+  /usuario/create:
+    post:
+      tags: [Usuários]
+      summary: Cria um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome: { type: string, example: "Larissa Oliveira" }
+                email: { type: string, example: "larissa@bconnector.com.br" }
+                senha: { type: string, example: "********" }
+      responses:
+        "200":
+          description: Usuário criado
+          content:
+            application/json:
+              example:
+                sucesso: true
+                id_usuario: "uuid-gerado"
+  /usuario/login:
+    post:
+      tags: [Usuários]
+      summary: Login de usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                senha: { type: string }
+      responses:
+        "200":
+          description: Login bem-sucedido
+          content:
+            application/json:
+              example:
+                sucesso: true
+                token: "jwt-token"
+
+
+
+paths:
+  /empresa/create:
+    post:
+      tags: [Empresas]
+      summary: Cria uma nova empresa
+      responses:
+        "200": { description: Empresa criada }
+  /empresa/list:
+    get:
+      tags: [Empresas]
+      summary: Lista empresas
+      responses:
+        "200": { description: Lista de empresas }
+
+
+
+paths:
+  /fornecedor/create:
+    post:
+      tags: [Fornecedores]
+      summary: Cria um novo fornecedor
+      responses:
+        "200": { description: Fornecedor criado }
+  /fornecedor/list:
+    get:
+      tags: [Fornecedores]
+      summary: Lista fornecedores
+      responses:
+        "200": { description: Lista de fornecedores }
+
+
+
+paths:
+  /produto/create:
+    post:
+      tags: [Produtos]
+      summary: Cria um novo produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Produto"
+      responses:
+        "200":
+          description: Produto criado
+          content:
+            application/json:
+              example:
+                sucesso: true
+                id_produto: "uuid-produto"
+  /produto/update:
+    post:
+      tags: [Produtos]
+      summary: Atualiza produto existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Produto"
+      responses:
+        "200":
+          description: Produto atualizado
+  /produto/list:
+    get:
+      tags: [Produtos]
+      summary: Lista produtos
+      parameters:
+        - name: id_fornecedor
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Lista de produtos
+  /produto/delete:
+    post:
+      tags: [Produtos]
+      summary: Exclui ou inativa produto
+      description: >
+        Apenas administradores, fornecedores ou clientes WL podem excluir.  
+        Se o produto tiver histórico de vendas, será apenas marcado como excluído.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_produto: { type: string }
+      responses:
+        "200":
+          description: Produto excluído/inativado
