@@ -3,7 +3,9 @@ openapi: 3.1.0
 info:
   title: Usuários API
   version: 1.0.0
-  description: Endpoints de autenticação e gestão de usuários.
+  description: Endpoints relacionados a usuários e autenticação.
+tags: [Usuários]
+
 paths:
   /usuario/create:
     post:
@@ -15,13 +17,35 @@ paths:
             schema:
               type: object
               properties:
-                nome: { type: string }
+                nome: { type: string, example: "Larissa Oliveira" }
+                email: { type: string, example: "larissa@bconnector.com.br" }
+                senha: { type: string, example: "********" }
+      responses:
+        "200":
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              example:
+                sucesso: true
+                id_usuario: "b9a7f22e-09e2-4f31-b9ef-3b7c2a5fa403"
+
+  /usuario/login:
+    post:
+      summary: Realiza login de usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
                 email: { type: string }
                 senha: { type: string }
       responses:
-        "200": { description: Usuário criado com sucesso }
-  /usuario/login:
-    post:
-      summary: Realiza o login de um usuário
-      responses:
-        "200": { description: Login realizado com sucesso }
+        "200":
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              example:
+                sucesso: true
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
