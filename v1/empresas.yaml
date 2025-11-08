@@ -6,6 +6,7 @@ paths:
       summary: Cria uma nova empresa
       responses:
         "200": { description: Empresa criada }
+
   /empresa/list:
     get:
       tags: [Empresas]
